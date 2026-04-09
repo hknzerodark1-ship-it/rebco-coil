@@ -1,0 +1,44 @@
+# DARPA QBI Stage A Proposal — Citadel Sovereign Systems
+# DARPA-PA-26-02-02 | Due: September 30, 2026
+
+proposal_metadata:
+  title: "Hybrid RL-Qubitized Quantum Chemistry for Sovereign Materials Discovery"
+  submitting_organization: "Citadel Sovereign Systems"
+  technical_poc: "Hien Khac Nguyen"
+  cost_volume: "$2.5M (Stage A)"
+  period_of_performance: "12 months (Oct 2026 — Sep 2027)"
+
+utility_workloads:
+  primary: "FeMo-co LLDUC model (76 orbitals, 152 qubits)"
+  secondary: "REBCO high-Tc superconductor simulation"
+  
+specifications:
+  logical_qubits: 500
+  physical_qubits: 50000
+  t_gate_count: 1e10
+  runtime_hours: 72
+  target_error: "1.6 mHa (chemical accuracy)"
+
+architecture:
+  type: "Hybrid superconducting + trapped-ion"
+  error_correction: "Bivariate bicycle [[144,12,12]]"
+  detection: "Iceberg [[k+2,k,2]]"
+  compression: "Tensor hypercontraction (THC)"
+  algorithm: "Qubitized quantum phase estimation"
+
+hybrid_loop:
+  classical: "PPO agent selects active space parameters"
+  quantum: "Qubitized QPE returns energy estimate"
+  reward: "-|E_estimated - E_exact| / threshold"
+
+milestones:
+  - date: "Q1 2027"
+    deliverable: "THC compression for FeMo-co"
+  - date: "Q2 2027"
+    deliverable: "Qubitized QPE circuit"
+  - date: "Q3 2027"
+    deliverable: "Iceberg VQE on 20 qubits"
+  - date: "Q4 2027"
+    deliverable: "Hybrid PPO + qubitization"
+  - date: "Q2 2028"
+    deliverable: "Stage B readiness"

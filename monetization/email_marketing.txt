@@ -1,0 +1,20 @@
+Hi Matter Labs team,
+
+We've published the first public benchmark of ZK proofs on production Android hardware (Pixel 10 Pro XL, Tensor G5).
+
+Key results:
+• 3-5ms for 4096-leaf Merkle trees (arity-2, Poseidon2)
+• <2°C temperature increase during sustained proving
+• 3.1x parallel speedup using all 8 cores
+
+Full dataset includes raw CSV (50+ runs), complete Rust code, thermal analysis, and Python visualization scripts.
+
+Landing page: https://431f13a6230f0894-136-23-59-162.serveousercontent.com
+
+Full report + data available for $499.
+
+We also see potential partnership or co-marketing opportunities and would love to explore ideas with your team.
+
+Best,
+Hien Khac Nguyen
+Citadel Labs
