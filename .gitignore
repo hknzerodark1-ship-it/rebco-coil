@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+venv/
+.cargo/
+target/
+results*.json
+*.png
+.cache/
+.claude/
+.rustup/
+*.json
+__pycache__/
+venv/
+.cargo/
+target/
