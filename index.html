@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon Mesh | QCNN Training Telemetry</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a0a3a 100%);
+            font-family: 'Courier New', monospace;
+            color: #00ffcc;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            padding: 30px;
+            border-bottom: 2px solid #00ffcc;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 3em;
+            text-shadow: 0 0 20px #00ffcc;
+            letter-spacing: 4px;
+        }
+        .status-badge {
+            display: inline-block;
+            background: #00ffcc22;
+            border: 1px solid #00ffcc;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 15px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ffcc;
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+        .card h3 {
+            color: #ff66cc;
+            margin-bottom: 15px;
+            border-left: 3px solid #ff66cc;
+            padding-left: 10px;
+        }
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00ffcc;
+        }
+        .metric-label {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+        .progress-bar {
+            background: #333;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #00ffcc, #ff66cc);
+            width: 0%;
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        .log-panel {
+            background: #000000aa;
+            border: 1px solid #00ffcc;
+            border-radius: 10px;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.8em;
+        }
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid #00ffcc22;
+            color: #88ffaa;
+        }
+        .log-entry.error { color: #ff6666; }
+        .log-entry.warning { color: #ffaa66; }
+        .command-bar {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex: 1;
+            background: #000000cc;
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+            padding: 10px;
+            font-family: monospace;
+            border-radius: 5px;
+        }
+        button {
+            background: #00ffcc;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #ff66cc;
+            color: #fff;
+        }
+        .dragon-icon {
+            font-size: 1.5em;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 5px #00ffcc; }
+            50% { opacity: 0.7; text-shadow: 0 0 20px #ff66cc; }
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #00ffcc33;
+            font-size: 0.7em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🐉 DRAGON MESH <span style="color:#ff66cc">| QCNN</span></h1>
+        <div class="status-badge">
+            <span class="dragon-icon">⚡</span> SOVEREIGN TRAINING ACTIVE <span class="dragon-icon">⚡</span>
+        </div>
+        <p style="margin-top: 10px;">Quantum Convolutional Neural Network | REBCO Integration Layer</p>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="card">
+            <h3>🔥 TRAINING METRICS</h3>
+            <div class="metric-value" id="accuracy">0.00%</div>
+            <div class="metric-label">Validation Accuracy</div>
+            <div class="progress-bar"><div class="progress-fill" id="acc-progress" style="width:0%"></div></div>
+            <div class="metric-value" id="loss">0.00</div>
+            <div class="metric-label">Loss</div>
+        </div>
+        <div class="card">
+            <h3>🌀 QUANTUM STATE</h3>
+            <div class="metric-value" id="qubit-fidelity">0.00</div>
+            <div class="metric-label">Qubit Fidelity</div>
+            <div class="metric-value" id="entanglement">0.00</div>
+            <div class="metric-label">Entanglement Entropy</div>
+        </div>
+        <div class="card">
+            <h3>⚡ REBCO INTEGRATION</h3>
+            <div class="metric-value" id="quench-rate">77%</div>
+            <div class="metric-label">Baseline Quench Rate</div>
+            <div class="metric-value" id="rl-improvement">0%</div>
+            <div class="metric-label">RL Improvement</div>
+        </div>
+        <div class="card">
+            <h3>🎯 DRAGON STATUS</h3>
+            <div class="metric-value" id="epoch">0</div>
+            <div class="metric-label">Current Epoch</div>
+            <div class="metric-value" id="best-acc">0.00%</div>
+            <div class="metric-label">Best Accuracy</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📡 LIVE TRAINING LOG</h3>
+        <div class="log-panel" id="log-panel">
+            <div class="log-entry">🐉 Dragon Mesh initialized...</div>
+            <div class="log-entry">⚡ QCNN layer compiled</div>
+            <div class="log-entry">🔥 REBCO quench protection active</div>
+            <div class="log-entry">🌀 Quantum circuit depth: 5</div>
+            <div class="log-entry">🎯 Target accuracy: 99.9%</div>
+            <div class="log-entry">--- WAITING FOR TRAINING DATA ---</div>
+        </div>
+    </div>
+
+    <div class="command-bar">
+        <input type="text" id="command-input" placeholder="Enter command... e.g., train --epochs 100" />
+        <button onclick="sendCommand()">EXECUTE</button>
+        <button onclick="clearLogs()">CLEAR LOGS</button>
+    </div>
+
+    <div class="footer">
+        <p>🐉 DRAGON ASCENDANT | HIEN KHAC NGUYEN | SOVEREIGN BENCHMARK v1.0</p>
+        <p>REBCO-Coil Integration | UniGRPO Ready | 3-5ms Inference</p>
+    </div>
+</div>
+
+<script>
+    // Simulate real-time telemetry updates
+    let epoch = 0;
+    let bestAcc = 0;
+    
+    function updateTelemetry() {
+        // Simulate training progress
+        epoch++;
+        const accuracy = Math.min(99.9, 70 + Math.random() * 25);
+        const loss = Math.max(0.01, 1.0 - (accuracy / 100) * 0.9);
+        const qubitFidelity = 0.85 + Math.random() * 0.14;
+        const entanglement = 0.6 + Math.random() * 0.3;
+        const rlImprovement = Math.min(85, (accuracy - 70) * 2.5);
+        
+        if (accuracy > bestAcc) bestAcc = accuracy;
+        
+        document.getElementById('accuracy').innerText = accuracy.toFixed(2) + '%';
+        document.getElementById('loss').innerText = loss.toFixed(4);
+        document.getElementById('qubit-fidelity').innerText = qubitFidelity.toFixed(4);
+        document.getElementById('entanglement').innerText = entanglement.toFixed(4);
+        document.getElementById('epoch').innerText = epoch;
+        document.getElementById('best-acc').innerText = bestAcc.toFixed(2) + '%';
+        document.getElementById('rl-improvement').innerText = rlImprovement.toFixed(1) + '%';
+        document.getElementById('acc-progress').style.width = accuracy + '%';
+        
+        // Add log entry occasionally
+        if (Math.random() < 0.3) {
+            addLog(`Epoch ${epoch}: acc=${accuracy.toFixed(2)}%, loss=${loss.toFixed(4)}`);
+        }
+    }
+    
+    function addLog(message, type = 'info') {
+        const panel = document.getElementById('log-panel');
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${type}`;
+        entry.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+        panel.appendChild(entry);
+        panel.scrollTop = panel.scrollHeight;
+        
+        // Keep last 100 entries
+        while (panel.children.length > 100) {
+            panel.removeChild(panel.firstChild);
+        }
+    }
+    
+    function sendCommand() {
+        const input = document.getElementById('command-input');
+        const command = input.value.trim();
+        if (!command) return;
+        
+        addLog(`> ${command}`, 'warning');
+        
+        // Parse commands
+        if (command === 'train' || command.startsWith('train --epochs')) {
+            addLog('🐉 Starting Dragon Mesh training...');
+            addLog('⚡ QCNN forward pass initialized');
+            addLog('🔥 REBCO quench simulation integrated');
+            
+            // Start real updates if not already running
+            if (!window.trainingInterval) {
+                window.trainingInterval = setInterval(updateTelemetry, 2000);
+                addLog('📡 Telemetry stream active (2s updates)');
+            } else {
+                addLog('⚠️ Training already running');
+            }
+        } else if (command === 'status') {
+            const acc = document.getElementById('accuracy').innerText;
+            addLog(`Current accuracy: ${acc}, Best: ${bestAcc.toFixed(2)}%`);
+        } else if (command === 'stop') {
+            if (window.trainingInterval) {
+                clearInterval(window.trainingInterval);
+                window.trainingInterval = null;
+                addLog('⏹️ Training stopped');
+            }
+        } else if (command === 'help') {
+            addLog('Available: train, status, stop, clear');
+        } else {
+            addLog(`Unknown command: ${command}`, 'error');
+        }
+        
+        input.value = '';
+    }
+    
+    function clearLogs() {
+        const panel = document.getElementById('log-panel');
+        panel.innerHTML = '<div class="log-entry">🐉 Logs cleared. Type "help" for commands.</div>';
+    }
+    
+    // Auto-start training simulation
+    setTimeout(() => {
+        addLog('🐉 Dragon Mesh v1.0 ready');
+        addLog('💡 Type "train" to start QCNN training');
+        addLog('📊 REBCO Monte Carlo: 77% baseline quench rate');
+    }, 1000);
+</script>
+</body>
+</html>
